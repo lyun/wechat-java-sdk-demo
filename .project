@@ -3,6 +3,7 @@
 	<name>wechat-java-sdk-demo</name>
 	<comment></comment>
 	<projects>
+		<project>wechat-java-sdk</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

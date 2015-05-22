@@ -48,40 +48,30 @@ public class WechatApiClient extends HttpServlet {
 		//配置回调信息
 				CallBack callback = new CallBack(){
 					@Override
-					public String replay(Message send) {
-						String type = send.getMsgType();
-						String event = send.getEvent();
-						String content = send.getContent();
-						
-						if(MessageType.Event.toString().equals(type)){
-							MessageType msgType = MessageType.valueOf(type);
-							switch (msgType) {
-							case Event:
-								if(MessageType.EventSubscribe.toString().equals(event)){
-									return replyWelcome(send);
-								}
-								break;
-							case Text:
-								if("hello".equals(content)){
-									return replyHello(send);	
-								} else {
-									Message replay = new Message();
-									replay.setEvent(MessageType.Text.toString());
-									replay.setFromUserName(send.getToUserName());
-									replay.setToUserName(send.getFromUserName());
-									replay.setContent("未知指令");
-									replay.setCreateTime(new Date().getTime());
-									return wechat.getReplay4Text(replay);
-								}
-												
-							default:
-								break;
+					public String reply(Message msg) {
+						String type = msg.getMsgType();
+						String event = msg.getEvent();
+						if(MessageType.event.toString().equals(type)){
+							if(MessageType.VIEW.toString().equals(event)){
+								
+							} else if(MessageType.CLICK.toString().equals(event)){
+								
+							} else if(MessageType.subscribe.toString().equals(event)){
+								return replyWelcome(msg);
+							} else if(MessageType.unsubscribe.toString().equals(event)){
+								
 							}
-							
-							return MessageType.Event.toString();
+						} else if(MessageType.text.toString().equals(type)){
+							switch (msg.getContent()) {
+							case "welcome":
+								return replyWelcome(msg);
+							case "hello":
+							default:
+								return replyHello(msg);
+								
+							}
 						}
-						
-						return "error";
+						return null;
 					}
 				};
 				
@@ -102,36 +92,38 @@ public class WechatApiClient extends HttpServlet {
 				
 		System.out.println(replay);
 	}
-	
+
 	
 	/**
 	 * 关注时回复
 	 * @param msg
 	 * @return
 	 */
-	private String replyWelcome(Message send){
-		Message replay = new Message();
-		replay.setEvent(MessageType.Text.toString());
-		replay.setFromUserName(send.getToUserName());
-		replay.setToUserName(send.getFromUserName());
-		replay.setContent("感谢您关注");
-		replay.setCreateTime(new Date().getTime());
-		return wechat.getReplay4Text(replay);
+	private String replyWelcome(Message msg){
+		Message reply = new Message();
+		reply.setEvent(MessageType.text.toString());
+		reply.setFromUserName(msg.getToUserName());
+		reply.setToUserName(msg.getFromUserName());
+		reply.setContent("感谢您关注");
+		reply.setCreateTime(new Date().getTime());
+		return wechat.getRepy4Text(reply);
 	}
 	
 	/**
 	 * 测试指令
-	 * @param send
+	 * @param msg
 	 * @return
 	 */
-	private String replyHello(Message send){
-		Message replay = new Message();
-		replay.setEvent(MessageType.Text.toString());
-		replay.setFromUserName(send.getToUserName());
-		replay.setToUserName(send.getFromUserName());
-		replay.setContent("接受到您发送的消息:\n"+send.getContent());
-		replay.setCreateTime(new Date().getTime());
-		return wechat.getReplay4Text(replay);
+	private String replyHello(Message msg){
+		Message reply = new Message();
+		reply.setEvent(MessageType.text.toString());
+		reply.setFromUserName(msg.getToUserName());
+		reply.setToUserName(msg.getFromUserName());
+		reply.setContent("接受到您发送的消息:\n"+msg.getContent());
+		reply.setCreateTime(new Date().getTime());
+		return wechat.getRepy4Text(reply);
 	}
+	
+
 
 }

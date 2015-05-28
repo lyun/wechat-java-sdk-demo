@@ -10,6 +10,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.usefulwww.core.wechat.CallBack;
 import com.usefulwww.core.wechat.Message;
 import com.usefulwww.core.wechat.MessageType;
@@ -18,13 +21,18 @@ import com.usefulwww.core.wechat.Wechat;
 /**
  * Servlet implementation class ApiClient
  */
+@WebServlet("/wechat/api/lyun")
 public class WechatApiClient extends HttpServlet {
+	
+	private static Logger logger = LoggerFactory.getLogger(WechatApiClient.class);
+	
 	private static final long serialVersionUID = 1L;
 
     /**
      * Default constructor. 
      */
     public WechatApiClient() {
+    	 super();
         // TODO Auto-generated constructor stub
     }
 
@@ -79,18 +87,21 @@ public class WechatApiClient extends HttpServlet {
 				
 				String echostr = request.getParameter("echostr");
 				String timestamp = request.getParameter("timestamp");
-				String token = request.getParameter("token");
+				//String token = request.getParameter("token");
+				String token = "lyun";
 				String nonce = request.getParameter("nonce");
 				String signature = request.getParameter("signature");
-				
-				//验证
-				boolean isvaild = wechat.vaild(token, signature, timestamp, nonce, echostr);
-				
-				//待回复的信息
-				String replay =wechat.reply(echostr, in, callback);
-				
-				
-		System.out.println(replay);
+				if(null!=echostr&&""!=echostr){
+					//验证
+					boolean isvaild = wechat.vaild(token, signature, timestamp, nonce, echostr);
+					logger.debug(isvaild+"/"+echostr+"/"+timestamp+"/"+token+"/"+nonce+"/"+signature);
+					response.getOutputStream().write(echostr.getBytes("UTF-8"));
+				} else {
+					//待回复的信息
+					String replay =wechat.reply(echostr, in, callback);
+					response.getOutputStream().write(replay.getBytes("UTF-8"));
+				}
+		
 	}
 
 	

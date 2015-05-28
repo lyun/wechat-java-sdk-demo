@@ -7,12 +7,4 @@
   <welcome-file-list>
     <welcome-file>index.html</welcome-file>
   </welcome-file-list>
-  <servlet>
-    <servlet-name>WechatApiClient</servlet-name>
-    <servlet-class>com.usefulwww.wechat.demo.WechatApiClient</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>WechatApiClient</servlet-name>
-    <url-pattern>/WechatApiClient</url-pattern>
-  </servlet-mapping>
 </web-app>
